@@ -1,9 +1,15 @@
-CodeIgniter Secure Authentication Library
+GCRUD
 =========================================
 
-This is a secure authentication library for codeigniter.
+Crud generator (Controller and model)
 
-**WARNING**: this is version 2 of this library, a more simplified, easier to use version that is easier to implement in existing code. The original library relied too much on correct model communication that now has been removed. Most of the functionality has been preserved, although some things have been moved to the model as you can see in the example folder.
+Requirements
+------------
+
+* CodeIgniter 3.0+
+* PHP 5.6+
+* MySQL
+
 
 Installation
 ------------
