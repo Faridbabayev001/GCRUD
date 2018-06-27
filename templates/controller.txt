@@ -1,0 +1,89 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class {controllerName} extends CI_Controller {
+
+	public function __construct()
+	{
+		parent::__construct();
+		{loadModel}
+	}
+
+	/**
+	 * Display a listing of the resource.
+	 */
+	public function index()
+	{
+		$data = $this->{modelName}->all();
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 */
+	public function create()
+	{
+		//
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 */
+	public function store()
+	{
+		$rules = $this->setRules();
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run() == TRUE)
+        {
+        	$data = array();
+         	$id = $this->{modelName}->insert($data);
+        }
+        else
+        {
+         	// show error page
+        }
+	}
+
+	/**
+	 * Display the specified resource.
+	 */
+	public function show($id)
+	{
+		$data = $this->{modelName}->find($id);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 */
+	public function edit()
+	{
+		//
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 */
+	public function update($id)
+	{
+        $data = array();
+        $this->{modelName}->update($id,$data);
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 */
+	public function destroy($id)
+	{
+		$this->{modelName}->destroy($id);
+	}
+
+	/**
+	 *  Set form validation rules
+	 * @return array
+	 */
+	private function setRules()
+	{
+		return array();
+	}
+
+}

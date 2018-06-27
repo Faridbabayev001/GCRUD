@@ -75,7 +75,7 @@ class GCrud
 			$modelName = $controller.'_model';
 			if (!file_exists(APPPATH.'/models/'.$modelName.'.php'))
 			{
-				$data = $this->generateModelContent($modelName);
+				$data = $this->generateModelContent($modelName,$controller);
 				write_file(APPPATH.'/models/'.$modelName.'.php', $data);
 			}
 		}
@@ -88,85 +88,13 @@ class GCrud
 	 */
 	private function generateControllerContent($conrollerName)
 	{
-		return <<<EOD
-	<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class $conrollerName extends CI_Controller {
-
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store()
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show()
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit()
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update()
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
-    {
-        //
-    }
-    
-    /**
-	 *  Set form validation rules
-	 * @return array
-	 */
-    private function setRules()
-    {
-    	return array();
-    }
-    
-}
-
-EOD;
+		$modelName = $conrollerName."_model";
+		$params = array(
+			'{controllerName}' => $conrollerName,
+			'{loadModel}' => '$this->load->model("'.$modelName.'");',
+			'{modelName}' => $modelName
+		);
+		$this->generateContent('controller.txt',$params);
 
 	}
 
@@ -175,47 +103,30 @@ EOD;
 	 * @param $modelName
 	 * @return string
 	 */
-	private function generateModelContent($modelName)
+	private function generateModelContent($modelName,$controllerName)
 	{
-		return <<<EOD
-<?php
-	defined('BASEPATH') OR exit('No direct script access allowed');
-	
-	class $modelName extends CI_Model  {
-	
-		public function __construct()
-		{
-			parent::__construct();
-		}
-		
-		public function all()
-		{
-			//
-		}
-		
-		public function find()
-		{
-			//
-		}
-		
-		public function insert()
-		{
-			//
-		}
-		
-		public function update()
-		{
-			//
-		}
-		
-		public function destroy()
-		{
-			//
-		}
-	
+		$params = array(
+			'{modelName}' => $modelName,
+			'{tableName}' => $this->options->tables[$controllerName]
+		);
+		$this->generateContent('model.txt',$params);
 	}
-EOD;
 
+	/**
+	 *  Load content from /templates path
+	 * @param $templateName
+	 * @param $params
+	 * @return mixed
+	 */
+	private function generateContent($templateName,$params)
+	{
+		$fp = fopen(APPPATH.'/libraries/gcrud/templates/'.$templateName, "r");
+		$content = fread($fp, filesize(APPPATH.'/libraries/gcrud/templates/'.$templateName));
+		$find       = array_keys($params);
+		$replace    = array_values($params);
+		$new_string = str_ireplace($find, $replace, $content);
+		return $new_string;
+		fclose($fp);
 	}
 
 	/**
